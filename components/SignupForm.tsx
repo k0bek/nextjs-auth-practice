@@ -14,7 +14,11 @@ const schema = yup
 	.required();
 type FormData = yup.InferType<typeof schema>;
 
-export default function SignupForm() {
+interface SignupFormProps {
+	onClick: () => void;
+}
+
+export default function SignupForm({ onClick }: SignupFormProps) {
 	const {
 		register,
 		handleSubmit,
@@ -68,7 +72,12 @@ export default function SignupForm() {
 
 			<p className=" self-center">
 				Have an account?{" "}
-				<span className="text-sky-600 font-medium cursor-pointer">Log in!</span>
+				<span
+					className="text-sky-600 font-medium cursor-pointer"
+					onClick={onClick}
+				>
+					Log in!
+				</span>
 			</p>
 		</form>
 	);

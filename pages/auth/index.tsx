@@ -1,9 +1,20 @@
 import LoginForm from "@/components/LoginForm";
 import SignupForm from "@/components/SignupForm";
-import React from "react";
+import React, { useState } from "react";
 
 const AuthPage = () => {
-	return <SignupForm />;
+	const [isLoginForm, setIsLoginForm] = useState(false);
+
+	const changeFormHandler = () => {
+		setIsLoginForm((prev) => {
+			return !prev;
+		});
+	};
+	return isLoginForm ? (
+		<LoginForm onClick={changeFormHandler} />
+	) : (
+		<SignupForm onClick={changeFormHandler} />
+	);
 };
 
 export default AuthPage;

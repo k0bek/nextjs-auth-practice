@@ -14,10 +14,10 @@ const schema = yup
 type FormData = yup.InferType<typeof schema>;
 
 interface LoginFormProps {
-	children: React.ReactNode;
+	onClick: () => void;
 }
 
-export default function LoginForm({ children }) {
+export default function LoginForm({ onClick }: LoginFormProps) {
 	const {
 		register,
 		handleSubmit,
@@ -55,7 +55,10 @@ export default function LoginForm({ children }) {
 
 			<p className=" self-center">
 				Do not have an account?{" "}
-				<span className="text-sky-600 font-medium cursor-pointer">
+				<span
+					className="text-sky-600 font-medium cursor-pointer"
+					onClick={onClick}
+				>
 					Sign up!
 				</span>
 			</p>
