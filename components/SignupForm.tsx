@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useState } from "react";
 
 const schema = yup
 	.object({
@@ -19,6 +20,9 @@ interface SignupFormProps {
 }
 
 export default function SignupForm({ onClick }: SignupFormProps) {
+	const [username, setUsername] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 	const {
 		register,
 		handleSubmit,
