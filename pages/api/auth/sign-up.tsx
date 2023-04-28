@@ -17,9 +17,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 	if (existingUser) {
 		res.status(422).json({ message: "User already exists" });
+		return;
 	}
 
-	const hashedPassword = hashPassword(password);
+	const hashedPassword = await hashPassword(password);
 
 	const result = await db.collection("users").insertOne({
 		email,

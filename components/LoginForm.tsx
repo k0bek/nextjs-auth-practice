@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { signIn } from "next-auth/react";
 import * as yup from "yup";
 
 const schema = yup
@@ -25,7 +26,18 @@ export default function LoginForm({ onClick }: LoginFormProps) {
 	} = useForm<FormData>({
 		resolver: yupResolver(schema),
 	});
-	const onSubmit = (data: FormData) => console.log(data);
+
+	const onSubmit = async (data: FormData) => {
+		const { email, password } = data;
+
+		const result = await signIn("credentials", {
+			redirect: false,
+			email,
+			password,
+		});
+
+		console.log(result);
+	};
 
 	return (
 		<form

@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const schema = yup
 	.object({
@@ -20,9 +20,7 @@ interface SignupFormProps {
 }
 
 export default function SignupForm({ onClick }: SignupFormProps) {
-	const [username, setUsername] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [invalidPassword, setInvalidPassword] = useState<boolean>(true);
 	const {
 		register,
 		handleSubmit,
@@ -30,7 +28,25 @@ export default function SignupForm({ onClick }: SignupFormProps) {
 	} = useForm<FormData>({
 		resolver: yupResolver(schema),
 	});
-	const onSubmit = (data: FormData) => console.log(data);
+
+	const createUser = async (name: string, email: string, password: string) => {
+		console.log(password);
+		const response = await fetch("api/auth/sign-up", {
+			method: "POST",
+			body: JSON.stringify({ username: name, email, password }),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+
+		setInvalidPassword(response.ok);
+	};
+
+	const onSubmit = (data: FormData) => {
+		const { name, email, password } = data;
+
+		createUser(name, email, password);
+	};
 
 	return (
 		<form
@@ -56,6 +72,7 @@ export default function SignupForm({ onClick }: SignupFormProps) {
 				{...register("email")}
 				className=" w-50 sm:w-96 border-2 border-l-indigo-100 rounded-md py-1"
 			/>
+			{!invalidPassword && <p>Email is already in use.</p>}
 			<p>{errors.email?.message}</p>
 
 			<label className="font-medium" htmlFor="password">
