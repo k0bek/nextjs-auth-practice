@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
 			},
 			async authorize(credentials, req) {
 				if (!credentials) {
-					throw new Error("Credentils not provided");
+					throw new Error("Credentials not provided");
 				}
 
 				const client = await getClient();
@@ -31,6 +31,7 @@ export const authOptions: NextAuthOptions = {
 				const user = await userCollection.findOne({ email: credentials.email });
 
 				if (!user) {
+					client.close();
 					throw new Error("There is no user with this email");
 				}
 
@@ -40,8 +41,11 @@ export const authOptions: NextAuthOptions = {
 				);
 
 				if (!isPasswordValid) {
+					client.close();
 					throw new Error("Password is invalid");
 				}
+
+				client.close();
 
 				return {
 					email: user.email,
@@ -53,4 +57,5 @@ export const authOptions: NextAuthOptions = {
 	],
 	secret: process.env.NEXTAUTH_SECRET,
 };
+
 export default NextAuth(authOptions);

@@ -35,8 +35,6 @@ export default function LoginForm({ onClick }: LoginFormProps) {
 			email,
 			password,
 		});
-
-		console.log(result);
 	};
 
 	return (
