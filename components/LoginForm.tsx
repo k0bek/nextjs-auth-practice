@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signIn } from "next-auth/react";
 import * as yup from "yup";
+import { useState } from "react";
 
 const schema = yup
 	.object({
@@ -27,7 +28,12 @@ export default function LoginForm({ onClick }: LoginFormProps) {
 		resolver: yupResolver(schema),
 	});
 
+	const [loading, setLoading] = useState(false);
+	const [submitted, setSubmitted] = useState(false);
+
 	const onSubmit = async (data: FormData) => {
+		setLoading(true);
+		setSubmitted(true);
 		const { email, password } = data;
 
 		const result = await signIn("credentials", {
@@ -35,6 +41,8 @@ export default function LoginForm({ onClick }: LoginFormProps) {
 			email,
 			password,
 		});
+		setLoading(false);
+		setSubmitted(false);
 	};
 
 	return (
@@ -58,10 +66,17 @@ export default function LoginForm({ onClick }: LoginFormProps) {
 			/>
 			<p>{errors.password?.message}</p>
 
-			<input
+			<button
 				type="submit"
-				className=" cursor-pointer bg-sky-600 text-white font-medium rounded-md py-2"
-			/>
+				className={`cursor-pointer font-medium rounded-md py-2 ${
+					loading || submitted
+						? "bg-gray-400 text-gray-600 cursor-not-allowed"
+						: "bg-sky-600 text-white"
+				}`}
+				disabled={loading || submitted}
+			>
+				{loading ? "Loading..." : "Log in"}
+			</button>
 
 			<p className=" self-center">
 				Do not have an account?{" "}

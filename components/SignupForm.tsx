@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useRef, useState } from "react";
+import { signIn } from "next-auth/react";
 
 const schema = yup
 	.object({
@@ -29,8 +30,12 @@ export default function SignupForm({ onClick }: SignupFormProps) {
 		resolver: yupResolver(schema),
 	});
 
+	const [loading, setLoading] = useState(false);
+	const [submitted, setSubmitted] = useState(false);
+
 	const createUser = async (name: string, email: string, password: string) => {
-		console.log(password);
+		setLoading(true);
+		setSubmitted(true);
 		const response = await fetch("api/auth/sign-up", {
 			method: "POST",
 			body: JSON.stringify({ username: name, email, password }),
@@ -40,6 +45,14 @@ export default function SignupForm({ onClick }: SignupFormProps) {
 		});
 
 		setInvalidPassword(response.ok);
+
+		await signIn("credentials", {
+			redirect: false,
+			email,
+			password,
+		});
+		setLoading(false);
+		setSubmitted(false);
 	};
 
 	const onSubmit = (data: FormData) => {
@@ -86,10 +99,17 @@ export default function SignupForm({ onClick }: SignupFormProps) {
 			/>
 			<p>{errors.password?.message}</p>
 
-			<input
+			<button
 				type="submit"
-				className=" cursor-pointer bg-sky-600 text-white font-medium rounded-md py-2"
-			/>
+				className={`cursor-pointer font-medium rounded-md py-2 ${
+					loading || submitted
+						? "bg-gray-400 text-gray-600 cursor-not-allowed"
+						: "bg-sky-600 text-white"
+				}`}
+				disabled={loading || submitted}
+			>
+				{loading ? "Loading..." : "Sign up"}
+			</button>
 
 			<p className=" self-center">
 				Have an account?{" "}
