@@ -3,7 +3,7 @@ import { MongoClient } from "mongodb";
 
 const getClient = async () => {
 	const client = await MongoClient.connect(
-		"mongodb+srv://kuba:kuba@authentication-practice.1hcb01b.mongodb.net/test"
+		"mongodb+srv://kuba:kuba@cluster0.rlmfnev.mongodb.net/test"
 	);
 
 	return client;

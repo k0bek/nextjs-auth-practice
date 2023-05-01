@@ -51,8 +51,11 @@ export default function SignupForm({ onClick }: SignupFormProps) {
 			email,
 			password,
 		});
-		setLoading(false);
 		setSubmitted(false);
+
+		setTimeout(() => {
+			setLoading(false);
+		}, 500);
 	};
 
 	const onSubmit = (data: FormData) => {
@@ -113,12 +116,15 @@ export default function SignupForm({ onClick }: SignupFormProps) {
 
 			<p className=" self-center">
 				Have an account?{" "}
-				<span
-					className="text-sky-600 font-medium cursor-pointer"
+				<button
+					className={`
+					${loading || submitted ? " text-gray-600 cursor-not-allowed" : " text-sky-600"}
+					`}
 					onClick={onClick}
+					disabled={loading || submitted}
 				>
 					Log in!
-				</span>
+				</button>
 			</p>
 		</form>
 	);
